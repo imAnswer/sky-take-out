@@ -104,4 +104,9 @@ public class DishServiceImpl implements DishService {
         }
 
     }
+
+    @Override
+    public void updateDish(DishDTO dishDTO) {
+
+    }
 }
