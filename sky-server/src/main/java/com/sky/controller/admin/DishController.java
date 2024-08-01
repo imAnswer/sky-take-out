@@ -43,7 +43,7 @@ public class DishController {
      */
     @GetMapping("/page")
     @ApiOperation("菜品分页查询")
-    public Result<PageResult> queryDishPage(@RequestBody DishPageQueryDTO dishPageQueryDTO) {
+    public Result<PageResult> queryDishPage(DishPageQueryDTO dishPageQueryDTO) {
         log.info("菜品分页查询：{}",dishPageQueryDTO);
         PageResult pageResult = dishService.queryDishPage(dishPageQueryDTO);
         return Result.success(pageResult);
@@ -72,7 +72,7 @@ public class DishController {
     public Result<DishVO> getById(@PathVariable Long id){
         log.info("根据id查询菜品：{}",id);
         DishVO dishVO = dishService.getByIdWithFlavor(id);
-        return null;
+        return Result.success(dishVO);
     }
 
     /**
