@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -91,7 +92,7 @@ public class DishServiceImpl implements DishService {
         }
 
         //判断当前菜品是否能够删除————是够被套餐关联了？
-        List<Long> setmealIds = setmealDishMapper.getSetmealDishIdsByDishIds(ids);
+        List<Long> setmealIds = setmealDishMapper.getSetmealIdsByDishIds(ids);
         if(setmealIds != null && setmealIds.size() > 0){
             throw new DeletionNotAllowedException(MessageConstant.DISH_BE_RELATED_BY_SETMEAL);
         }
@@ -144,5 +145,31 @@ public class DishServiceImpl implements DishService {
             dishFlavorMapper.insertBatch(flavors);
         }
     }
+
+    /**
+     * 条件查询菜品和口味
+     * @param dish
+     * @return
+     */
+    public List<DishVO> listWithFlavor(Dish dish) {
+        List<Dish> dishList = dishMapper.list(dish);
+
+        List<DishVO> dishVOList = new ArrayList<>();
+
+        for (Dish d : dishList) {
+            DishVO dishVO = new DishVO();
+            BeanUtils.copyProperties(d,dishVO);
+
+            //根据菜品id查询对应的口味
+            List<DishFlavor> flavors = dishFlavorMapper.getByDishId(d.getId());
+
+            dishVO.setFlavors(flavors);
+            dishVOList.add(dishVO);
+        }
+
+        return dishVOList;
+    }
+
+
 
 }
